@@ -23,7 +23,7 @@ L2.place(x=250,y=135)
 I2 = Entry(root,width=80,borderwidth=15,background="#EEEEC5")
 I2.place(x=50,y=170)
 
-B1 = Button(root,image=img1,borderwidth=0,command=lambda: engine.Frames(vidName))
+B1 = Button(root,image=img1,borderwidth=0,command=lambda: engine.Frames(vidName,pngName))
 B1.place(x=70,y=280)
 
 B2 = Button(root,image=img2,borderwidth=0)
@@ -32,13 +32,17 @@ B2.place(x=380,y=280)
 L3 = Label(root,text="HSA Soft Limited",font="Sansation 10",fg="grey")
 L3.place(x=600,y=375)
 def openpng():
-    pngName = filedialog.askopenfilename(initialdir="/",title="Select The Image",filetypes=(("jpeg","*.jpeg"),("jpg","*jpg"),("png","*png")))
+    global pngName
+    pngName = filedialog.askopenfilename(initialdir="/",title="Select The Image",filetypes=(("jpeg","*.jpeg"),("jpg","*.jpg"),("png","*.png")))
+    print(pngName)
+    I1.insert(0,pngName)
 
 vidName = ""    
 def openmkv():
     global vidName
-    vidName = filedialog.askopenfilename(initialdir="/",title="Select The Video",filetypes=(("mkv","*.mkv"),("mp4","*.mp4")))
+    vidName = filedialog.askopenfilename(initialdir="/",title="Select The Video",filetypes=(("mp4","*.mp4"),("mkv","*.mkv")))
     print(vidName)
+    I2.insert(0,vidName)
 
 B3 = Button(root,text="TARGET IMAGE",width=9,padx=20,pady=10,command= lambda:openpng(),bg="Green",font="Bold")
 B3.place(x=590,y=80)

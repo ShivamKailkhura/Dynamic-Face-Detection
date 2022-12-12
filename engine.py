@@ -1,43 +1,60 @@
-
 import cv2
 import os
+import face_recognition
 
-def Frames(vidName):
 
+count = 0
+def Frames(vidName,imgname):
+
+    global count
     cam = cv2.VideoCapture(vidName)
+
+    image  = face_recognition.load_image_file(imgname)
+    image_encoding = face_recognition.face_encodings(image)[0]
+
+
 
     try:
 
-        # creating a folder named data
-        if not os.path.exists('data'):
-            os.makedirs('data')
-    
-    # if not created then raise error
-    except OSError:
-        print ('Error: Creating directory of data')
-    
-    # frame
-    currentframe = 0
-    
-    while(True):
-
-        # reading from frame
-        ret,frame = cam.read()
-    
-        if ret:
-            # if video is still left continue creating images
-            name = './data/frame' + str(currentframe) + '.jpg'
-            print ('Creating...' + name)
-    
-            # writing the extracted images
-            cv2.imwrite(name, frame)
-    
-            # increasing counter so that it will
-            # show how many frames are created
-            currentframe += 1
-        else:
-            break
+        if not os.path.exists("data"):
+            os.makedirs("data")
         
-    # Release all space and windows once done
+        if not os.path.exists("found_images"):
+            os.makedirs("found_images")
+    
+    except OSError:
+        print("Error creating os directory")
+
+
+    frames = cam.get(cv2.CAP_PROP_FRAME_COUNT)
+    fps = cam.get(cv2.CAP_PROP_FPS)
+
+    time = int(frames/fps)*1000
+
+    print(time)
+    i = 0
+
+    
+    while i<=time:
+
+        cam.set(cv2.CAP_PROP_POS_MSEC, i)
+        ret, frame = cam.read()
+
+        frameid = './data/frame'+str(i)+".jpg"
+
+        unImage = face_recognition.load_image_file(frame)
+        unImg_encoding = face_recognition.face_encodings(unImage)
+
+        result = face_recognition.compare_faces([image_encoding], unImg_encoding)
+
+        if result:
+            frameid2 = './found_images/frame'+str(i)+".jpg"
+            cv2.imwrite(frameid2,frame)
+            count+=1
+
+        cv2.imwrite(frameid,frame)
+
+        i+=1000
+
+    
     cam.release()
-    cv2.destroyAllWindows()
