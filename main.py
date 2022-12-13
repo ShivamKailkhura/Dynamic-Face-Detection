@@ -33,14 +33,14 @@ L3 = Label(root,text="HSA Soft Limited",font="Sansation 10",fg="grey")
 L3.place(x=600,y=375)
 def openpng():
     global pngName
-    pngName = filedialog.askopenfilename(initialdir="/",title="Select The Image",filetypes=(("jpeg","*.jpeg"),("jpg","*.jpg"),("png","*.png")))
+    pngName = filedialog.askopenfilename(initialdir="/Desktop",title="Select The Image",filetypes=(("jpg","*.jpg"),("png","*.png"),("jpeg","*.jpeg")))
     print(pngName)
     I1.insert(0,pngName)
 
 vidName = ""    
 def openmkv():
     global vidName
-    vidName = filedialog.askopenfilename(initialdir="/",title="Select The Video",filetypes=(("mp4","*.mp4"),("mkv","*.mkv")))
+    vidName = filedialog.askopenfilename(initialdir="/Desktop",title="Select The Video",filetypes=(("mp4","*.mp4"),("mkv","*.mkv")))
     print(vidName)
     I2.insert(0,vidName)
 

@@ -10,8 +10,8 @@ def Frames(vidName,imgname):
     cam = cv2.VideoCapture(vidName)
 
     image  = face_recognition.load_image_file(imgname)
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
     image_encoding = face_recognition.face_encodings(image)[0]
-
 
 
     try:
@@ -33,7 +33,7 @@ def Frames(vidName,imgname):
 
     print(time)
     i = 0
-
+    cd =0
     
     while i<=time:
 
@@ -41,20 +41,30 @@ def Frames(vidName,imgname):
         ret, frame = cam.read()
 
         frameid = './data/frame'+str(i)+".jpg"
+        cv2.imwrite(frameid,frame)
 
-        unImage = face_recognition.load_image_file(frame)
-        unImg_encoding = face_recognition.face_encodings(unImage)
+        unImage  = face_recognition.load_image_file(frameid)
+        unImage = cv2.cvtColor(unImage,cv2.COLOR_BGR2RGB)
+        try :
+            unImg_encoding = face_recognition.face_encodings(unImage)[0]
+        except:
+            cd=cd+1
+            print("NO FACE ", cd)
+            i+=1000
+            continue
 
-        result = face_recognition.compare_faces([image_encoding], unImg_encoding)
+        result = face_recognition.compare_faces([image_encoding], unImg_encoding,tolerance = 0.4)
+        print(result)
 
-        if result:
+        if True in result:
             frameid2 = './found_images/frame'+str(i)+".jpg"
             cv2.imwrite(frameid2,frame)
             count+=1
 
-        cv2.imwrite(frameid,frame)
+        
 
         i+=1000
 
     
     cam.release()
+    cv2.destroyAllWindows()
