@@ -1,8 +1,13 @@
 import cv2
 import os
 import face_recognition
+import threading
+from tkinter import messagebox
 
-
+def showres(img):
+    window_name = 'image'
+    cv2.imshow(window_name,img)
+    cv2.waitKey(0)
 count = 0
 def Frames(vidName,imgname):
 
@@ -48,23 +53,32 @@ def Frames(vidName,imgname):
         try :
             unImg_encoding = face_recognition.face_encodings(unImage)[0]
         except:
-            cd=cd+1
-            print("NO FACE ", cd)
+            
+            print("NO FACE ")
             i+=1000
             continue
 
-        result = face_recognition.compare_faces([image_encoding], unImg_encoding,tolerance = 0.4)
-        print(result)
+        result = face_recognition.compare_faces([image_encoding], unImg_encoding,tolerance = 0.6)
+        
 
         if True in result:
+            print(result)
             frameid2 = './found_images/frame'+str(i)+".jpg"
             cv2.imwrite(frameid2,frame)
+            if cd==0:
+                imag = cv2.imread(frameid2)
+                T2 = threading.Thread(target=lambda:showres(imag))
+                T2.setDaemon=True
+                T2.start()
+                T2.join()
+                cd+=1
             count+=1
 
         
 
         i+=1000
 
+    messagebox.showinfo("Result","Found "+ str(count)+" Results")
     
     cam.release()
     cv2.destroyAllWindows()
